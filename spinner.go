@@ -78,9 +78,9 @@ func frame(ctx context.Context, wg *sync.WaitGroup, message string, s spinner) {
 				// fmt.Println("cause:", cause)
 				switch cause {
 				case context.Canceled:
-					fmt.Printf("\r%s %s ... done!\n", iconInfo, message)
+					fmt.Printf("\r%s %s ... done!\n", IconInfo, message)
 				default:
-					fmt.Printf("\r%s %s ... failed: %v\n", iconError, message, cause)
+					fmt.Printf("\r%s %s ... failed: %v\n", IconError, message, cause)
 				}
 				return
 			// print the next spinner frame

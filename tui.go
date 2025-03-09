@@ -18,11 +18,11 @@ type TUI struct {
 }
 
 const (
-	iconDebug = "🔷"
-	iconInfo  = "🟢"
-	iconWarn  = "🟨"
-	iconError = "❌"
-	iconRun   = "▶"
+	IconDebug = "🔷"
+	IconInfo  = "🟢"
+	IconWarn  = "🟨"
+	IconError = "❌"
+	IconRun   = "▶"
 	// iconRun   = "💲"
 )
 
@@ -107,25 +107,25 @@ func printTUI(msg string, icon string, fields ...interface{}) {
 
 func (t *TUI) Debug(msg string, fields ...interface{}) {
 	if t.level.Level() <= slog.LevelDebug {
-		printTUI(msg, iconDebug, fields...)
+		printTUI(msg, IconDebug, fields...)
 	}
 }
 
 func (t *TUI) Info(msg string, fields ...interface{}) {
 	if t.level.Level() <= slog.LevelInfo {
-		printTUI(msg, iconInfo, fields...)
+		printTUI(msg, IconInfo, fields...)
 	}
 }
 
 func (t *TUI) Warn(msg string, fields ...interface{}) {
 	if t.level.Level() <= slog.LevelWarn {
-		printTUI(msg, iconWarn, fields...)
+		printTUI(msg, IconWarn, fields...)
 	}
 }
 
 func (t *TUI) Error(msg string, fields ...interface{}) {
 	if t.level.Level() <= slog.LevelError {
-		printTUI(msg, iconError, fields...)
+		printTUI(msg, IconError, fields...)
 	}
 }
 

@@ -25,7 +25,7 @@ func TestWaitSpinner(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		wg, cancel := WaitSpinner(context.Background(), "waiting on foo", runner)
 		defer wg.Wait()
-		time.Sleep(1 * time.Second)
+		time.Sleep(1 * time.Nanosecond)
 		cancel(nil)
 	})
 	t.Run("failure", func(t *testing.T) {
@@ -51,7 +51,7 @@ func TestShowExample(t *testing.T) {
 	wg, cancel = WaitSpinner(ctx, "dismantling capitalism", runner)
 	defer wg.Wait()
 	time.Sleep(4 * time.Second)
-	cancel(errors.New("too entrenched, build communicty and try again"))
+	cancel(errors.New("too entrenched, build community and try again"))
 
 	time.Sleep(2 * time.Second)
 }
