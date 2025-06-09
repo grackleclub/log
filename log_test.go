@@ -60,6 +60,7 @@ func TestNew(t *testing.T) {
 }
 
 func printAll(log *slog.Logger) {
+	log = log.With("service", "cool_service")
 	log.Debug("debug message test", "key", "value")
 	log.Info("info message test", "key", "value")
 	log.Warn("warn message test", "key", "value")
