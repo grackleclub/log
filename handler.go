@@ -83,7 +83,6 @@ func (h *SlogHandler) Handle(ctx context.Context, r slog.Record) error {
 		fmt.Fprintf(destination, "%s %s %s %q%s\n",
 			timestamp, level, source, msg, attrs,
 		)
-
 	}
 	return nil
 }
@@ -104,7 +103,8 @@ func (h *SlogHandler) Enabled(ctx context.Context, level slog.Level) bool {
 	return level >= h.level
 }
 
-// Init puts a pretty custom handler on otherwise standard log/slog
+// Init puts a pretty custom handler on otherwise standard log/slog.
+// WARN:this is the old way of doing it, not preferred. (Why? Delete?)
 func Init(level slog.Level) {
 	handlerLevel = level
 	slog.SetDefault(slog.New(&SlogHandler{
