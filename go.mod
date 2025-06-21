@@ -2,6 +2,8 @@ module github.com/grackleclub/log
 
 go 1.23.0
 
+retract [v1.0.0, v1.1.4] // should not have been published as v1
+
 require (
 	github.com/lmittmann/tint v1.0.5
 	github.com/mattn/go-isatty v0.0.20
