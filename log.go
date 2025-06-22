@@ -22,7 +22,7 @@ const ISO8601 = "2006-01-02T15:04:05.000Z"
 // NO_COLOR environment variable disables color output.
 func New(opts slog.HandlerOptions) (*slog.Logger, error) {
 	w := os.Stderr
-	_, noColor := os.LookupEnv("NO_COLOR")
+	_, envNoColor := os.LookupEnv("NO_COLOR")
 	if opts.Level == nil {
 		opts.Level = slog.LevelInfo
 	}
@@ -38,16 +38,16 @@ func New(opts slog.HandlerOptions) (*slog.Logger, error) {
 		tint.NewHandler(w, &tint.Options{
 			Level:      opts.Level,
 			AddSource:  opts.AddSource,
-			NoColor:    noColor,
+			NoColor:    envNoColor,
 			TimeFormat: ISO8601,
 		}),
 	)
-	logger.Info(
+	logger.Debug(
 		"new logger",
 		"source", opts.AddSource,
 		"level", opts.Level,
-		"NO_COLOR", os.Getenv("NO_COLOR"),
-		"DEBUG", os.Getenv("DEBUG"),
+		"NO_COLOR", envNoColor,
+		"DEBUG", envDebug,
 	)
 	return logger, nil
 }
