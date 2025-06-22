@@ -23,15 +23,16 @@ const ISO8601 = "2006-01-02T15:04:05.000Z"
 func New(opts slog.HandlerOptions) (*slog.Logger, error) {
 	w := os.Stderr
 	_, noColor := os.LookupEnv("NO_COLOR")
-	if opts.Level == slog.Level(0) && !opts.AddSource && opts.ReplaceAttr == nil {
-		_, envDebug := os.LookupEnv("DEBUG")
-		if envDebug {
-			opts.Level = slog.LevelDebug
-			opts.AddSource = true
-		} else {
-			opts.Level = slog.LevelInfo
-			opts.AddSource = false
-		}
+	if opts.Level == slog.Level(0) {
+		opts.Level = slog.LevelInfo
+	}
+	if !opts.AddSource {
+		opts.AddSource = false
+	}
+	_, envDebug := os.LookupEnv("DEBUG")
+	if envDebug {
+		opts.Level = slog.LevelDebug
+		opts.AddSource = true
 	}
 	logger := slog.New(
 		tint.NewHandler(w, &tint.Options{
