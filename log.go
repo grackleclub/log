@@ -1,6 +1,7 @@
 package log
 
 import (
+	"io"
 	"log/slog"
 	"os"
 
@@ -9,7 +10,7 @@ import (
 
 const ISO8601 = "2006-01-02T15:04:05.000Z"
 
-// New creates a new slog.Logger with a tint handler that outputs to stderr.
+// New creates a new slog.Logger with a tint handler that defaults to stderr.
 // If empty slog.HandlerOptions are provided, env var DEBUG is checked.
 // If DEBUG is unset:
 //   - Level: slog.LevelInfo
@@ -20,8 +21,14 @@ const ISO8601 = "2006-01-02T15:04:05.000Z"
 //   - AddSource: true.
 //
 // NO_COLOR environment variable disables color output.
-func New(opts slog.HandlerOptions) (*slog.Logger, error) {
-	w := os.Stderr
+func New(opts slog.HandlerOptions, writers ...io.Writer) (*slog.Logger, error) {
+	var out io.Writer
+	if len(writers) == 0 {
+		out = os.Stderr
+	} else {
+		out = io.MultiWriter(writers...)
+	}
+
 	_, envNoColor := os.LookupEnv("NO_COLOR")
 	if opts.Level == nil {
 		opts.Level = slog.LevelInfo
@@ -35,7 +42,7 @@ func New(opts slog.HandlerOptions) (*slog.Logger, error) {
 		opts.AddSource = true
 	}
 	logger := slog.New(
-		tint.NewHandler(w, &tint.Options{
+		tint.NewHandler(out, &tint.Options{
 			Level:      opts.Level,
 			AddSource:  opts.AddSource,
 			NoColor:    envNoColor,
