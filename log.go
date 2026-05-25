@@ -60,11 +60,9 @@ func New(opts slog.HandlerOptions, writers ...io.Writer) (*slog.Logger, error) {
 }
 
 // NewWithHandlers creates a logger that fans out to the default tint
-// handler (stderr) plus any additional slog.Handlers provided.
-// When no extra handlers are given, this is equivalent to New.
-func NewWithHandlers(
-	opts slog.HandlerOptions, extra ...slog.Handler,
-) (*slog.Logger, error) {
+// handler (stderr) plus any additional slog.Handlers, such as an
+// OpenTelemetry log handler. Equivalent to New when no extras are given.
+func NewWithHandlers(opts slog.HandlerOptions, extra ...slog.Handler) (*slog.Logger, error) {
 	if len(extra) == 0 {
 		return New(opts)
 	}
@@ -86,7 +84,7 @@ func NewWithHandlers(
 	all := make([]slog.Handler, 0, len(extra)+1)
 	all = append(all, tintH)
 	all = append(all, extra...)
-	logger := slog.New(&FanoutHandler{handlers: all})
+	logger := slog.New(&fanoutHandler{handlers: all})
 	logger.Debug(
 		"new logger (fanout)",
 		"source", opts.AddSource,
