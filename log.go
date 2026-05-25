@@ -58,3 +58,40 @@ func New(opts slog.HandlerOptions, writers ...io.Writer) (*slog.Logger, error) {
 	)
 	return logger, nil
 }
+
+// NewWithHandlers creates a logger that fans out to the default tint
+// handler (stderr) plus any additional slog.Handlers provided.
+// When no extra handlers are given, this is equivalent to New.
+func NewWithHandlers(
+	opts slog.HandlerOptions, extra ...slog.Handler,
+) (*slog.Logger, error) {
+	if len(extra) == 0 {
+		return New(opts)
+	}
+	_, envNoColor := os.LookupEnv("NO_COLOR")
+	if opts.Level == nil {
+		opts.Level = slog.LevelInfo
+	}
+	_, envDebug := os.LookupEnv("DEBUG")
+	if envDebug {
+		opts.Level = slog.LevelDebug
+		opts.AddSource = true
+	}
+	tintH := tint.NewHandler(os.Stderr, &tint.Options{
+		Level:      opts.Level,
+		AddSource:  opts.AddSource,
+		NoColor:    envNoColor,
+		TimeFormat: ISO8601,
+	})
+	all := make([]slog.Handler, 0, len(extra)+1)
+	all = append(all, tintH)
+	all = append(all, extra...)
+	logger := slog.New(&FanoutHandler{handlers: all})
+	logger.Debug(
+		"new logger (fanout)",
+		"source", opts.AddSource,
+		"level", opts.Level,
+		"handlers", len(all),
+	)
+	return logger, nil
+}
